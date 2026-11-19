@@ -4,7 +4,17 @@ name: St Pauli Ticket Monitor
 on:
   schedule:
     - cron: "0 */5 * * *"
+
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Was soll ausgeführt werden?"
+        required: true
+        type: choice
+        default: check
+        options:
+          - check
+          - test
 
 permissions:
   contents: write
@@ -19,21 +29,26 @@ jobs:
 
     steps:
       - name: Repository auschecken
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Python einrichten
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
       - name: Abhängigkeiten installieren
         run: pip install -r requirements.txt
 
-      - name: Websites prüfen
+      - name: Websites prüfen oder Telegram testen
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python monitor.py
+        run: |
+          if [ "${{ github.event.inputs.mode }}" = "test" ]; then
+            python monitor.py --test
+          else
+            python monitor.py
+          fi
 
       - name: Neuen Stand speichern
         run: |
@@ -41,6 +56,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add state.json
           if ! git diff --cached --quiet; then
-            git commit -m "Update website monitoring state"
+            git commit -m "Update monitoring state"
             git push
           fi
