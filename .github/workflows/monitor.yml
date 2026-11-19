@@ -30,6 +30,9 @@ jobs:
     steps:
       - name: Repository auschecken
         uses: actions/checkout@v5
+        
+      - name: Aktuellen GitHub-Stand synchronisieren
+        run: git pull --rebase origin main
 
       - name: Python einrichten
         uses: actions/setup-python@v6
