@@ -15,6 +15,7 @@ on:
         options:
           - check
           - test
+          - simulate
 
 permissions:
   contents: write
@@ -49,6 +50,8 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.mode }}" = "test" ]; then
             python monitor.py --test
+          elif [ "${{ github.event.inputs.mode }}" = "simulate" ]; then
+            python monitor.py --simulate
           else
             python monitor.py
           fi
