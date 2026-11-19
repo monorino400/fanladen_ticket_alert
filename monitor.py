@@ -268,6 +268,21 @@ def make_diff(old, new):
 
 def main():
     # Testmodus: Telegram testen, ohne Websites oder Status zu verändern.
+    
+     # Simulation einer neuen Auswärtsfahrt
+    if "--simulate" in sys.argv:
+        send_telegram(
+            "⚫ FC ST. PAULI TICKET-TICKER\n\n"
+            "🚌 TESTSIMULATION: NEUE AUSWÄRTSFAHRT!\n\n"
+            "Beispiel: Borussia Dortmund – FC St. Pauli\n"
+            "Datum: 15.03.2027\n\n"
+            "Dies ist eine Testnachricht. "
+            "Es wurde keine echte Änderung erkannt.\n\n"
+            "Beispiel-Link:\n"
+            "https://www.stpauli-fanladen.de/tickets/"
+        )
+        print("Simulation erfolgreich.")
+        return
     if "--test" in sys.argv:
         send_telegram(
             "⚫ FC ST. PAULI TICKET-TICKER\n\n"
